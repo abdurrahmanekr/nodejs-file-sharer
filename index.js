@@ -8,48 +8,48 @@ const MAX_FILE_SIZE = null;
 const LISTEN_PORT = null;
 
 http.createServer(function (req, res) {
-        if (req.url == '/fileupload') {
-            var form = new formidable.IncomingForm();
+    if (req.url == '/fileupload') {
+        var form = new formidable.IncomingForm();
 
-            // default 10GB
-            form.maxFileSize = Math.pow(1024, 3) * 10;
+        // default 10GB
+        form.maxFileSize = Math.pow(1024, 3) * 10;
 
-            form.parse(req, function (err, fields, files) {
-                if (!files.filetoupload) {
-                    console.log(err);
-                    console.log(files);
-                    res.statusCode = 400;
-                    res.write('File not uploaded!');
+        form.parse(req, function (err, fields, files) {
+            if (!files.filetoupload) {
+                console.log(err);
+                console.log(files);
+                res.statusCode = 400;
+                res.write('File not uploaded!');
+                res.end();
+                return;
+            }
+
+            var oldpath = files.filetoupload.path;
+            var newpath = FILE_DIR || path.join(__dirname, 'uploaded_files', files.filetoupload.name);
+
+            fs.rename(oldpath, newpath, function (err) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.write('!ERROR! File not uploaded');
                     res.end();
-                    return;
+                    console.log('ERROR -', err);
                 }
-
-                var oldpath = files.filetoupload.path;
-                var newpath = FILE_DIR || path.join(__dirname, 'uploaded_files', files.filetoupload.name);
-
-                fs.rename(oldpath, newpath, function (err) {
-                    if (err) {
-                        res.statusCode = 500;
-                        res.write('!ERROR! File not uploaded');
-                        res.end();
-                        console.log('ERROR -', err);
-                    }
-                    else {
-                        console.log('SUCCESS -', newpath);
-                        res.write('File uploaded and moved!');
-                        res.end();
-                    }
-                });
+                else {
+                    console.log('SUCCESS -', newpath);
+                    res.write('File uploaded and moved!');
+                    res.end();
+                }
             });
-        }
-        else {
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
-            res.write('<input type="file" name="filetoupload"><br>');
-            res.write('<input type="submit">');
-            res.write('</form>');
+        });
+    }
+    else {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
+        res.write('<input type="file" name="filetoupload"><br>');
+        res.write('<input type="submit">');
+        res.write('</form>');
 
-            return res.end();
-        }
+        return res.end();
+    }
 })
 .listen(LISTEN_PORT || 1453);
