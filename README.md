@@ -16,9 +16,7 @@ $ npm start
 
 Suppose you use two devices connected to the same network.
 
-1. Let someone set up **NodeJs File SHARER**. Then run the this command: ```
-npm start
-```
+1. Let someone set up **NodeJs File SHARER**. Then run the this command: `npm start`
 
 2. The application will be broadcast by port ***1453*** by default.
 
