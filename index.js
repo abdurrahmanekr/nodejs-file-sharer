@@ -18,6 +18,7 @@ http.createServer(function (req, res) {
                 if (!files.filetoupload) {
                     console.log(err);
                     console.log(files);
+                    res.statusCode = 400;
                     res.write('File not uploaded!');
                     res.end();
                     return;
@@ -28,13 +29,16 @@ http.createServer(function (req, res) {
 
                 fs.rename(oldpath, newpath, function (err) {
                     if (err) {
+                        res.statusCode = 500;
                         res.write('!ERROR! File not uploaded');
                         res.end();
-                        throw err;
+                        console.log('ERROR -', err);
                     }
-
-                    res.write('File uploaded and moved!');
-                    res.end();
+                    else {
+                        console.log('SUCCESS -', newpath);
+                        res.write('File uploaded and moved!');
+                        res.end();
+                    }
                 });
             });
         }
