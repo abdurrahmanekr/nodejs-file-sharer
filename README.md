@@ -2,7 +2,7 @@
 
 Share files with friends on the same network without the need for a flash drive
 
-### All dependencies: nodejs, formidable.
+### All dependencies: nodejs, express.
 
 ## Installization
 
