@@ -3,141 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>NodeJs File SHARER</title>
-    <style type="text/css">
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-        }
-
-        body {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
-        .container {
-            background: #efefef;
-            width: 100%;
-            height: 100%;
-            overflow-y: scroll;
-        }
-
-        .header {
-            padding: 10px;
-            text-align: center;
-            font-size: 20px;
-            margin-top: 20px;
-        }
-
-        .header a {
-            text-decoration: none;
-            color: #005441;
-        }
-
-        .header a:hover {
-            text-decoration: underline;
-        }
-
-        .dropbox {
-            margin: auto;
-            margin-top: 70px;
-            width: 350px;
-            height: 350px;
-            border: 1px dashed #ccc;
-            background: #fff;
-        }
-
-        .dropbox-container {
-            padding: 0 40px;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .dropbox-container:hover {
-            cursor: pointer;
-            background: #f9f9f9;
-        }
-
-        .dropbox-container > div {
-            margin-top: 40px;
-        }
-
-        .dropbox-icon {
-            text-align: center;
-        }
-
-        .dropbox-icon img {
-            margin: auto;
-            width: 70px;
-        }
-
-        .dropbox-text {
-            text-align: center;
-            color: #333;    
-            font-size: 20px;
-        }
-
-        .dropbox-button {
-            margin-top: 10px;
-            text-align: right;
-        }
-
-        .dropbox-button button {
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 1px;
-            background: #fefefe;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .dropbox-button button:hover {
-            background: #efefef;
-        }
-
-        .dropbox-button button:active,
-        .dropbox-button button:focus {
-            background: #ddd;
-            outline: 1px solid #ccc;
-        }
-
-        .selected-file {
-            width: 500px;
-            margin: auto;
-            margin-top: 70px;
-            margin-bottom: 100px;
-            padding: 10px;
-            background: #fff;
-            border: 1px dashed #ccc;
-        }
-
-        .selected-file .loading-file {
-            display: flex;
-            padding-top: 10px;
-        }
-
-        .selected-file .loading-file:first-child {
-            padding-top: 0;
-        }
-
-        .loading-file span#filename {
-            width: 200px;
-            overflow: hidden;
-            word-break: break-all;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        .loading-file span#progress {
-            border: 1px solid #efefef;
-            transition: 500ms;
-            color: #fff;
-            padding: 2px 4px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="./libs/style.css">
 </head>
 <body>
     <div class="container">
@@ -164,6 +30,7 @@
 
     <script type="text/javascript" src="./libs/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
+        var uploading = [];
         $(function () {
             $(".dropbox-container").on("click", function () {
                 var file = document.createElement('input');
@@ -188,7 +55,7 @@
                     for (var i = 0; i < files.length; i++) {
                         var id = +new Date();
                         appendList(id, files[i].name);
-                        
+
                         upload(files[i], id)
                     }
                 }
@@ -205,15 +72,44 @@
             });
         });
 
+        window.addEventListener("beforeunload", function (event) {
+            // Cancel the event as stated by the standard.
+            if (uploading.length !== 0) {
+                event.preventDefault();
+
+                // Chrome requires returnValue to be set.
+                event.returnValue = false;
+            }
+        });
+
         function appendList(id, name) {
             $(".selected-file").append('<div class="loading-file" id="'+id+'"><span id="filename">'+name+'</span><span id="progress"></span></div>');
         }
 
         function upload(files, id) {
+            uploading.push(id);
             var data = new FormData();
             data.append('fileupload', files);
 
             var xhr = new XMLHttpRequest();
+
+            function finallyXHR() {
+                var index = uploading.indexOf(id);
+                if (index !== -1) {
+                    uploading.splice(index, 1);
+                }
+            }
+
+            xhr.onerror = (err) => {
+                xhr.onreadystatechange = null;
+                finallyXHR();
+            };
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    return finallyXHR();
+                }
+            };
 
             xhr.upload.addEventListener("progress", function (event) {
                 var percent = Math.round((event.loaded / event.total) * 100);
