@@ -2,7 +2,7 @@
 
 Share files with friends on the same network without the need for a flash drive
 
-| Dropdown | Directory |
+| Select Files | Directory |
 | --- | --- |
 | ![screenshot from 2018-09-27 11-49-10](https://user-images.githubusercontent.com/15075759/46135955-24c69880-c24f-11e8-8c71-a4c70259cca8.png) | ![screenshot from 2018-09-27 12-17-55](https://user-images.githubusercontent.com/15075759/46136066-68b99d80-c24f-11e8-97f9-33b634d4f0c0.png) |
 
