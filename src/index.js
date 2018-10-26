@@ -11,8 +11,10 @@ const MAX_FILE_SIZE = null;
 const LISTEN_PORT = null;
 
 const publicPath = path.join(__dirname, 'public');
+const upPath = path.join(__dirname, '..', 'uploaded_files');
 
 app.use(express.static(publicPath));
+app.use('/files', express.static(upPath));
 
 app.post('/fileupload', function (req, res) {
     var form = new formidable.IncomingForm();
