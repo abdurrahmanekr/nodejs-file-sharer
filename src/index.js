@@ -1,4 +1,4 @@
-var fs = require('fs');
+var mv = require('mv');
 var path = require('path');
 
 var express = require('express');
@@ -32,7 +32,7 @@ app.post('/fileupload', function (req, res) {
         var oldpath = files.fileupload.path;
         var newpath = FILE_DIR || path.join(__dirname, '..', 'uploaded_files', files.fileupload.name);
 
-        fs.rename(oldpath, newpath, function (err) {
+        mv(oldpath, newpath, function (err) {
             if (err) {
                 console.log('ERROR -', err);
 
