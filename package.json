@@ -1,6 +1,6 @@
 {
   "name": "nodejs-file-sharer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "^4.16.3",
     "formidable": "^1.2.1",
+    "mod_autoindex": "^1.8.0",
     "mv": "^2.1.1"
   }
 }

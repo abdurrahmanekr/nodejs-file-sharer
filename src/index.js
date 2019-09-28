@@ -4,6 +4,8 @@ var path = require('path');
 var express = require('express');
 var formidable = require('formidable');
 
+var autoindex = require('mod_autoindex');
+
 var app = express();
 
 const FILE_DIR = null;
@@ -13,8 +15,11 @@ const LISTEN_PORT = null;
 const publicPath = path.join(__dirname, 'public');
 const upPath = path.join(__dirname, '..', 'uploaded_files');
 
+console.log(upPath);
+
 app.use(express.static(publicPath));
-app.use('/files', express.static(upPath));
+app.use('/files/', express.static(upPath));
+app.use('/files/', autoindex(upPath));
 
 app.post('/fileupload', function (req, res) {
     var form = new formidable.IncomingForm();
