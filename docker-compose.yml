@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  nodejs-file-sharer:
+    restart: always
+    image: abdurrahmanekr/nodejs-file-sharer:1.0.1
+    ports:
+      - "1453:1453"
+    volumes:
+      - "/Users/burak/share/uploaded_files:/usr/src/app/uploaded_files"
