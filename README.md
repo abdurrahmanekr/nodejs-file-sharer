@@ -35,6 +35,12 @@ Suppose you use two devices connected to the same network.
 
 7. If you want to download the uploaded files, you can go to /files path and view them. (Ex: http://192.168.1.21:1453/files/)
 
+## Bash File Upload With cURL
+
+```
+curl -F "fileupload=@/path/to/file" http://<ipaddress>:1453/fileupload
+```
+
 ## Help improve
 
 This app needs a
