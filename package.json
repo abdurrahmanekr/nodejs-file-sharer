@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "formidable": "^1.2.1",
     "mod_autoindex": "^1.8.0",
     "mv": "^2.1.1"
